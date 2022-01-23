@@ -1,10 +1,14 @@
 #include "header.h"
 
-extern void createTable(int);
+extern int **createTable(int difficulty);
+extern void printTable(int **table, int difficulty);
+extern void freeTableMatrix(int **table, int difficulty);
 
 int main()
 {
+    srand(time(NULL));
     int difficulty;
+    int **table;
     system("CLS");
 
     printf("\t###########################\n");
@@ -24,7 +28,13 @@ int main()
     printf("\n\t> ");
     scanf("%d", &difficulty);
 
-    createTable(difficulty);
+    system("CLS");
+
+    table = createTable(difficulty);
+    printTable(table, difficulty);
+
+    freeTableMatrix(table, difficulty);
+    printf("\n\n\t>> PROGRAM SUCCESSFULLY TERMINATED <<\n");
 
     return 0;
 }
