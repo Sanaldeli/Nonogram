@@ -1,6 +1,6 @@
 CC = gcc
 ARG = -O0
-OBJ = main.o table.o
+OBJ = main.o tableOps.o gameOps.o
 BIN = main
 
 all: $(BIN)

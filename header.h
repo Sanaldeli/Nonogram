@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define TABLE_SIZE(x) (((x) + 1) * 5)
 #define FAIL(x)                         \
     {                                   \
         printf("\n\t>> %s fail <<", x); \
