@@ -11,4 +11,12 @@
         exit(-1);                       \
     }
 
+typedef struct
+{
+    int userTableSize;
+    int gameTableSize;
+    int filledPointAmount;
+    int limit;
+} difficulty;
+
 #endif

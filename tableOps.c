@@ -1,47 +1,48 @@
 #include "header.h"
 
-typedef struct
-{
-    int userTableSize;
-    int gameTableSize;
-    int filledPointAmount;
-    int limit;
-} difficulty;
+int **userTableGenerator();
+int **gameTableGenerator();
+void horizontalCounts(int **userTable, int **gameTable);
 
-const difficulty diff[3] = {{8, 5, 15, 3}, {15, 10, 60, 5}, {23, 15, 105, 8}};
+extern const difficulty diff[3];
+extern const int d;
 
-int **userTableGenerator(int);
-
-void createTable(int ***userTable, int ***gameTable, int d)
+void createTable(int ***userTable, int ***gameTable)
 {
     int i, j;
     int x, y;
-    int tableSize = diff[d].gameTableSize;
+    int gameTableSize = diff[d].gameTableSize;
+    int userTableSize = diff[d].userTableSize;
     int blankCount = diff[d].filledPointAmount;
     int lim = diff[d].limit;
 
     *userTable = userTableGenerator(d);
+    *gameTable = gameTableGenerator(d);
 
-    for (i = 0; i < diff[d].userTableSize; ++i)
+    /*
+     for (i = 0; i < userTableSize; ++i)
     {
-        for (j = 0; j < diff[d].userTableSize; ++j)
+        for (j = 0; j < userTableSize; ++j)
         {
         }
     }
+    //*/
 
     for (i = 0; i < blankCount; ++i)
     {
         do
         {
-            x = rand() % tableSize + lim;
-            y = rand() % tableSize + lim;
-        } while ((*userTable)[x][y] == 1); // if matrix already has 1 at that coordinate
+            x = rand() % gameTableSize;
+            y = rand() % gameTableSize;
+        } while ((*gameTable)[x][y] == 1); // if matrix already has 1 at that coordinate
 
-        (*userTable)[x][y] = 1;
+        (*gameTable)[x][y] = 1;
     }
+
+    horizontalCounts(*userTable, *gameTable);
 }
 
-void printTable(int **table, int d)
+void printTable(int **table)
 {
     int i, j;
     int userTS = diff[d].userTableSize;
@@ -76,19 +77,19 @@ void printTable(int **table, int d)
         printf("%1x  ", i);
 }
 
-int **userTableGenerator(int d)
+int **userTableGenerator()
 {
     int **matrix;
     int i, j;
     int size = diff[d].userTableSize;
     int tableSize = diff[d].gameTableSize;
 
-    matrix = (int **)calloc(size, sizeof(int *));
+    matrix = (int **)malloc(size * sizeof(int *));
     if (matrix == NULL)
         FAIL("Mallocation");
     for (i = 0; i < size; ++i)
     {
-        matrix[i] = (int *)calloc(size, sizeof(int));
+        matrix[i] = (int *)malloc(size * sizeof(int));
         if (matrix[i] == NULL)
             FAIL("Mallocation");
 
@@ -99,7 +100,64 @@ int **userTableGenerator(int d)
     return matrix;
 }
 
-void freeUserTable(int **matrix, int d)
+int **gameTableGenerator()
+{
+    int **matrix;
+    int i, j;
+    int size = diff[d].gameTableSize;
+    int tableSize = diff[d].gameTableSize;
+
+    matrix = (int **)malloc(size * sizeof(int *));
+    if (matrix == NULL)
+        FAIL("Mallocation");
+    for (i = 0; i < size; ++i)
+    {
+        matrix[i] = (int *)calloc(size, sizeof(int));
+        if (matrix[i] == NULL)
+            FAIL("Mallocation");
+    }
+
+    return matrix;
+}
+
+void horizontalCounts(int **userTable, int **gameTable)
+{
+    int i, j, k;
+    int limit = diff[d].limit;
+    int counters[10] = {0};
+    int size = diff[d].gameTableSize;
+
+    for (i = 0; i < size; ++i)
+    {
+        // operations for i'th row of the table
+        for (j = 0; j < limit; ++j)
+            counters[j] = 0;
+
+        k = 0;
+        for (j = 0; j < size; ++j)
+        {
+            while (gameTable[i][j])
+            {
+                counters[k]++;
+                j++;
+            }
+            k++;
+        }
+        for (j = 0; j < limit; ++j)
+            printf("%3d", counters[j]);
+        printf("\n");
+
+        for (j = limit - 1; j >= 0; --j)
+        {
+            if (counters[j])
+                userTable[i + limit][j] = counters[limit - j - 1];
+            else
+                j++;
+        }
+    }
+}
+
+void freeUserTable(int **matrix)
 {
     int i;
     int size = diff[d].userTableSize;
@@ -108,7 +166,7 @@ void freeUserTable(int **matrix, int d)
     free(matrix);
 }
 
-void freeGameTable(int **matrix, int d)
+void freeGameTable(int **matrix)
 {
     int i;
     int size = diff[d].gameTableSize;
