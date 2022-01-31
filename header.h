@@ -16,7 +16,7 @@ typedef struct
 {
     int userTableSize;
     int gameTableSize;
-    int filledPointAmount;
+    int filledBoxAmount;
     int limit;
 } difficultyInfo;
 
@@ -26,5 +26,16 @@ typedef struct
     int **user;
     difficultyInfo difficulty;
 } gameTable;
+
+// ASCII characters for drawing the game table
+#define TransparentBox 178
+#define SolidBox 219
+// line characters
+#define hor_line 186
+#define TR_corner 187
+#define BR_corner 188
+#define BL_corner 200
+#define TL_corner 201
+#define ver_line 205
 
 #endif

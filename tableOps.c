@@ -1,18 +1,21 @@
 #include "header.h"
 
-int **allocateTable(int tableSize);
-void horizontalCounts(gameTable table);
+int **allocateTable(int size);
+void adjacentCounter(gameTable table);
 
 gameTable createTable(difficultyInfo difficulty)
 {
-    int i, j;
-    int x, y;
+    int i, j, x, y;
     gameTable result;
 
     result.user = allocateTable(difficulty.userTableSize);
     result.game = allocateTable(difficulty.gameTableSize);
 
-    for (i = 0; i < difficulty.filledPointAmount; ++i)
+    for (i = difficulty.limit; i < difficulty.userTableSize; ++i)
+        for (j = difficulty.limit; j < difficulty.userTableSize; ++j)
+            (result.user)[i][j] = -1;
+
+    for (i = 0; i < difficulty.filledBoxAmount; ++i)
     {
         do
         {
@@ -23,46 +26,50 @@ gameTable createTable(difficultyInfo difficulty)
         (result.game)[x][y] = 1;
     }
 
-    horizontalCounts(result);
-
     result.difficulty = difficulty;
+    adjacentCounter(result);
 
     return result;
 }
 
-void printTable(gameTable table)
+void adjacentCounter(gameTable table)
 {
     int i, j;
-    int userTS = table.difficulty.userTableSize;
-    int gameTS = table.difficulty.gameTableSize;
+    int k_hor, k_ver;
     int limit = table.difficulty.limit;
+    int size = table.difficulty.gameTableSize;
 
-    printf("\n\n\t ");
-    printf("\n\t%c%c", 201, 205);
-    for (i = 0; i < userTS; ++i)
-        printf("%c%c%c", 205, 205, 205);
-
-    for (i = 0; i < userTS; ++i)
+    for (i = 0; i < size; ++i)
     {
-        printf("\n\t%c ", 186);
+        // operations for i'th row of the table
 
-        for (j = 0; j < userTS; ++j)
+        k_hor = k_ver = limit;
+        for (j = size - 1; j >= 0; --j)
         {
-            if ((table.user)[i][j] == -1)
-                printf("%c%c%c", 177, 177, 177);
-            else if ((table.user)[i][j] == 0)
-                printf("   ");
-            else
-                printf("%c%c%c", 219, 219, 219);
+            if ((table.game)[i][j])
+            {
+                --k_hor;
+                while (j >= 0 && (table.game)[i][j])
+                {
+                    ((table.user)[limit + i][k_hor])++;
+                    --j;
+                }
+            }
         }
-        if (i >= limit)
-            printf(" %1x", i - limit);
+
+        for (j = size - 1; j >= 0; --j)
+        {
+            if ((table.game)[j][i])
+            {
+                --k_ver;
+                while (j >= 0 && (table.game)[j][i])
+                {
+                    ((table.user)[k_ver][limit + i])++;
+                    --j;
+                }
+            }
+        }
     }
-    printf("\n\t");
-    for (i = 0; i <= limit; ++i)
-        printf("   ");
-    for (i = 0; i < gameTS; ++i)
-        printf("%1x  ", i);
 }
 
 int **allocateTable(int size)
@@ -81,64 +88,6 @@ int **allocateTable(int size)
     }
 
     return matrix;
-}
-
-// int **gameTableGenerator(difficultyInfo difficulty)
-// {
-//     int **matrix;
-//     int i, j;
-//     int size = difficulty.gameTableSize;
-
-//     matrix = (int **)malloc(size * sizeof(int *));
-//     if (matrix == NULL)
-//         FAIL("Mallocation");
-//     for (i = 0; i < size; ++i)
-//     {
-//         matrix[i] = (int *)calloc(size, sizeof(int));
-//         if (matrix[i] == NULL)
-//             FAIL("Mallocation");
-//     }
-
-//     return matrix;
-// }
-
-void horizontalCounts(gameTable table)
-{
-    int i, j, k;
-    int limit = table.difficulty.limit;
-    int size = table.difficulty.gameTableSize;
-    int counters[8];
-    bool firstBoxFlag;
-
-    for (i = 0; i < size; ++i)
-    {
-        // operations for i'th row of the table
-        for (j = 0; j < limit; ++j)
-            counters[j] = 0;
-
-        k = limit;
-        firstBoxFlag = false;
-        for (j = size - 1; j >= 0;)
-        {
-            if (!firstBoxFlag && (table.game)[i][j])
-            {
-                firstBoxFlag = true;
-                --k;
-            }
-
-            while ((table.game)[i][j])
-            {
-                (counters[k])++;
-                --j;
-            }
-
-            firstBoxFlag = false;
-        }
-
-        for (j = limit - 1; j >= 0; --j)
-        {
-        }
-    }
 }
 
 void freeTable(gameTable table)
