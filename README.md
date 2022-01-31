@@ -1,4 +1,4 @@
-## NONOGRAM PUZZLE
+# NONOGRAM PUZZLE
 
 Hello there!
 I've just created Nonogram puzzle in C.
@@ -6,7 +6,7 @@ I've just created Nonogram puzzle in C.
 About Nonogram:
 https://en.wikipedia.org/wiki/Nonogram
 
-# How to Play?
+## How to Play?
 
 First, you must choose a difficulty (easy to hard, table gets bigger by difficulty).
 After that, you will see the Nonogram table for the chosen difficulty.
