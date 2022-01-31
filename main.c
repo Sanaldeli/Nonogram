@@ -1,19 +1,18 @@
 #include "header.h"
 
-extern void createTable(int ***userTable, int ***gameTable);
-extern void printTable(int **table);
-extern void freeTableMatrix(int **table);
-extern void printUTable_dev(int **userTable, int **gameTable);
-extern void printGTable_dev(int **gameTable);
+extern gameTable createTable(difficultyInfo diff);
+extern void printTable(gameTable table);
+extern void printUTable_dev(gameTable table);
+extern void printGTable_dev(gameTable table);
+extern void freeTable(gameTable table);
 
-const difficulty diff[3] = {{8, 5, 15, 3}, {15, 10, 60, 5}, {23, 15, 105, 8}};
-int d; // stands for difficulty
+const difficultyInfo diff[3] = {{8, 5, 15, 3}, {15, 10, 60, 5}, {23, 15, 105, 8}};
+gameTable table;
 
 int main()
 {
+    int difficulty;
     srand(time(NULL));
-    int **userTable;
-    int **gameTable;
     system("CLS");
 
     printf("\t###########################\n");
@@ -26,24 +25,25 @@ int main()
     printf("to numbers at the side of the grid.\n\n");
     system("PAUSE");
 
-    printf("Please select which difficulty you would like to play!\n");
-    printf("0: Easy         (5x5 grid)\n");
-    printf("1: Intermediate (10x10 grid)\n");
-    printf("2: Hard         (15x15 grid)\n");
-    printf("\n\t> ");
-    scanf("%d", &d);
+    do
+    {
+        printf("Please select which difficulty you would like to play!\n");
+        printf("0: Easy         (5x5 grid)\n");
+        printf("1: Intermediate (10x10 grid)\n");
+        printf("2: Hard         (15x15 grid)\n");
+        printf("\n\t> ");
+        scanf("%d", &difficulty);
+        system("CLS");
+    } while (difficulty < 0 || difficulty > 2);
 
-    system("CLS");
-
-    createTable(&userTable, &gameTable);
+    table = createTable(diff[difficulty]);
     //  printTable(userTable, difficulty);
+    printf("\n\n");
+    printUTable_dev(table);
     printf("\n");
-    printUTable_dev(userTable, gameTable);
-    printf("\n");
-    printGTable_dev(gameTable);
+    printGTable_dev(table);
 
-    freeUserTable(userTable);
-    freeGameTable(gameTable);
+    freeTable(table);
 
     printf("\n\n\t>> PROGRAM SUCCESSFULLY TERMINATED <<\n");
 

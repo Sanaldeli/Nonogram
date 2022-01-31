@@ -1,53 +1,41 @@
 #include "header.h"
 
-int **userTableGenerator();
-int **gameTableGenerator();
-void horizontalCounts(int **userTable, int **gameTable);
+int **allocateTable(int tableSize);
+void horizontalCounts(gameTable table);
 
-extern const difficulty diff[3];
-extern const int d;
-
-void createTable(int ***userTable, int ***gameTable)
+gameTable createTable(difficultyInfo difficulty)
 {
     int i, j;
     int x, y;
-    int gameTableSize = diff[d].gameTableSize;
-    int userTableSize = diff[d].userTableSize;
-    int blankCount = diff[d].filledPointAmount;
-    int lim = diff[d].limit;
+    gameTable result;
 
-    *userTable = userTableGenerator(d);
-    *gameTable = gameTableGenerator(d);
+    result.user = allocateTable(difficulty.userTableSize);
+    result.game = allocateTable(difficulty.gameTableSize);
 
-    /*
-     for (i = 0; i < userTableSize; ++i)
-    {
-        for (j = 0; j < userTableSize; ++j)
-        {
-        }
-    }
-    //*/
-
-    for (i = 0; i < blankCount; ++i)
+    for (i = 0; i < difficulty.filledPointAmount; ++i)
     {
         do
         {
-            x = rand() % gameTableSize;
-            y = rand() % gameTableSize;
-        } while ((*gameTable)[x][y] == 1); // if matrix already has 1 at that coordinate
+            x = rand() % difficulty.gameTableSize;
+            y = rand() % difficulty.gameTableSize;
+        } while ((result.game)[x][y] == 1); // if matrix already has 1 at that coordinate
 
-        (*gameTable)[x][y] = 1;
+        (result.game)[x][y] = 1;
     }
 
-    horizontalCounts(*userTable, *gameTable);
+    horizontalCounts(result);
+
+    result.difficulty = difficulty;
+
+    return result;
 }
 
-void printTable(int **table)
+void printTable(gameTable table)
 {
     int i, j;
-    int userTS = diff[d].userTableSize;
-    int gameTS = diff[d].gameTableSize;
-    int lim = diff[d].limit;
+    int userTS = table.difficulty.userTableSize;
+    int gameTS = table.difficulty.gameTableSize;
+    int limit = table.difficulty.limit;
 
     printf("\n\n\t ");
     printf("\n\t%c%c", 201, 205);
@@ -60,52 +48,27 @@ void printTable(int **table)
 
         for (j = 0; j < userTS; ++j)
         {
-            if (table[i][j] == -1)
+            if ((table.user)[i][j] == -1)
                 printf("%c%c%c", 177, 177, 177);
-            else if (table[i][j] == 0)
+            else if ((table.user)[i][j] == 0)
                 printf("   ");
             else
                 printf("%c%c%c", 219, 219, 219);
         }
-        if (i >= lim)
-            printf(" %1x", i - lim);
+        if (i >= limit)
+            printf(" %1x", i - limit);
     }
     printf("\n\t");
-    for (i = 0; i <= lim; ++i)
+    for (i = 0; i <= limit; ++i)
         printf("   ");
     for (i = 0; i < gameTS; ++i)
         printf("%1x  ", i);
 }
 
-int **userTableGenerator()
+int **allocateTable(int size)
 {
     int **matrix;
     int i, j;
-    int size = diff[d].userTableSize;
-    int tableSize = diff[d].gameTableSize;
-
-    matrix = (int **)malloc(size * sizeof(int *));
-    if (matrix == NULL)
-        FAIL("Mallocation");
-    for (i = 0; i < size; ++i)
-    {
-        matrix[i] = (int *)malloc(size * sizeof(int));
-        if (matrix[i] == NULL)
-            FAIL("Mallocation");
-
-        for (j = 0; j < size; ++j)
-            matrix[i][j] = -1;
-    }
-
-    return matrix;
-}
-
-int **gameTableGenerator()
-{
-    int **matrix;
-    int i, j;
-    int size = diff[d].gameTableSize;
-    int tableSize = diff[d].gameTableSize;
 
     matrix = (int **)malloc(size * sizeof(int *));
     if (matrix == NULL)
@@ -120,12 +83,32 @@ int **gameTableGenerator()
     return matrix;
 }
 
-void horizontalCounts(int **userTable, int **gameTable)
+// int **gameTableGenerator(difficultyInfo difficulty)
+// {
+//     int **matrix;
+//     int i, j;
+//     int size = difficulty.gameTableSize;
+
+//     matrix = (int **)malloc(size * sizeof(int *));
+//     if (matrix == NULL)
+//         FAIL("Mallocation");
+//     for (i = 0; i < size; ++i)
+//     {
+//         matrix[i] = (int *)calloc(size, sizeof(int));
+//         if (matrix[i] == NULL)
+//             FAIL("Mallocation");
+//     }
+
+//     return matrix;
+// }
+
+void horizontalCounts(gameTable table)
 {
     int i, j, k;
-    int limit = diff[d].limit;
-    int counters[10] = {0};
-    int size = diff[d].gameTableSize;
+    int limit = table.difficulty.limit;
+    int size = table.difficulty.gameTableSize;
+    int counters[8];
+    bool firstBoxFlag;
 
     for (i = 0; i < size; ++i)
     {
@@ -133,44 +116,40 @@ void horizontalCounts(int **userTable, int **gameTable)
         for (j = 0; j < limit; ++j)
             counters[j] = 0;
 
-        k = 0;
-        for (j = 0; j < size; ++j)
+        k = limit;
+        firstBoxFlag = false;
+        for (j = size - 1; j >= 0;)
         {
-            while (gameTable[i][j])
+            if (!firstBoxFlag && (table.game)[i][j])
             {
-                counters[k]++;
-                j++;
+                firstBoxFlag = true;
+                --k;
             }
-            k++;
+
+            while ((table.game)[i][j])
+            {
+                (counters[k])++;
+                --j;
+            }
+
+            firstBoxFlag = false;
         }
-        for (j = 0; j < limit; ++j)
-            printf("%3d", counters[j]);
-        printf("\n");
 
         for (j = limit - 1; j >= 0; --j)
         {
-            if (counters[j])
-                userTable[i + limit][j] = counters[limit - j - 1];
-            else
-                j++;
         }
     }
 }
 
-void freeUserTable(int **matrix)
+void freeTable(gameTable table)
 {
     int i;
-    int size = diff[d].userTableSize;
-    for (i = 0; i < size; ++i)
-        free(matrix[i]);
-    free(matrix);
-}
 
-void freeGameTable(int **matrix)
-{
-    int i;
-    int size = diff[d].gameTableSize;
-    for (i = 0; i < size; ++i)
-        free(matrix[i]);
-    free(matrix);
+    for (i = 0; i < table.difficulty.gameTableSize; ++i)
+        free((table.game)[i]);
+    free(table.game);
+
+    for (i = 0; i < table.difficulty.userTableSize; ++i)
+        free((table.user)[i]);
+    free(table.user);
 }

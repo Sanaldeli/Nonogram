@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define FAIL(x)                         \
     {                                   \
@@ -17,6 +18,13 @@ typedef struct
     int gameTableSize;
     int filledPointAmount;
     int limit;
-} difficulty;
+} difficultyInfo;
+
+typedef struct
+{
+    int **game;
+    int **user;
+    difficultyInfo difficulty;
+} gameTable;
 
 #endif
