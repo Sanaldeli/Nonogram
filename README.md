@@ -6,6 +6,8 @@ I've just created Nonogram puzzle in C.
 About Nonogram:
 https://en.wikipedia.org/wiki/Nonogram
 
+![Screenshot 2022-01-31 182003](https://user-images.githubusercontent.com/90065524/151822025-79f1c402-f3e5-4ba0-beaa-1db7c7983048.png)
+
 ## How to Play?
 
 First, you must choose a difficulty (easy to hard, table gets bigger by difficulty).
