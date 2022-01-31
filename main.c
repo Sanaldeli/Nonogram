@@ -1,11 +1,10 @@
 #include "header.h"
 
 extern gameTable createTable(difficultyInfo diff);
-extern void printTable(gameTable table);
-// extern void printUTable_dev(gameTable table);
-// extern void printGTable_dev(gameTable table);
 extern void freeTable(gameTable table);
 extern void printTable_dev(gameTable table);
+extern void printTable(gameTable table);
+extern void playGame(gameTable table);
 
 const difficultyInfo diff[3] = {{8, 5, 15, 3}, {15, 10, 60, 5}, {23, 15, 105, 8}};
 gameTable table;
@@ -36,17 +35,13 @@ int main()
         scanf("%d", &difficulty);
         system("CLS");
     } while (difficulty < 0 || difficulty > 2);
-    //*/
-
-    //  difficulty = 0; //default difficulty is temporarily set to easy --for development purposes--
 
     table = createTable(diff[difficulty]);
-    // printTable_dev(table);
-    printTable(table);
+    // printTable_dev(table);   // for debugging purposes
+
+    playGame(table);
 
     freeTable(table);
-
     printf("\n\n\t>> PROGRAM SUCCESSFULLY TERMINATED <<\n");
-
     return 0;
 }

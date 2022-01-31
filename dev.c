@@ -21,10 +21,7 @@ void printTable_dev(gameTable table)
     for (i = 0; i < table.difficulty.userTableSize; ++i)
     {
         for (j = 0; j < table.difficulty.userTableSize; ++j)
-            // if (table.user[i][j])
             printf("  %d", (table.user)[i][j]);
-        // else
-        // printf("   ");
         printf("\n");
     }
 }

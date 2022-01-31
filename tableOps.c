@@ -11,9 +11,13 @@ gameTable createTable(difficultyInfo difficulty)
     result.user = allocateTable(difficulty.userTableSize);
     result.game = allocateTable(difficulty.gameTableSize);
 
+    // for (i = 0; i < difficulty.userTableSize; ++i)
+    //     for (j = 0; j < difficulty.userTableSize; ++j)
+    //         (result.user)[i][j] = -2;
+
     for (i = difficulty.limit; i < difficulty.userTableSize; ++i)
         for (j = difficulty.limit; j < difficulty.userTableSize; ++j)
-            (result.user)[i][j] = -1;
+            (result.user)[i][j] = -2;
 
     for (i = 0; i < difficulty.filledBoxAmount; ++i)
     {
@@ -41,7 +45,7 @@ void adjacentCounter(gameTable table)
 
     for (i = 0; i < size; ++i)
     {
-        // operations for i'th row of the table
+        // operations for i'th row and column of the table
 
         k_hor = k_ver = limit;
         for (j = size - 1; j >= 0; --j)

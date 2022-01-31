@@ -1,11 +1,11 @@
 CC = gcc
 ARG = -O0
 OBJ = main.o tableOps.o gameOps.o dev.o
-BIN = main
+BIN = game
 
 all: $(BIN)
 
-main: $(OBJ)
+game: $(OBJ)
 	$(CC) $(ARG) $(OBJ) -o $(BIN)
 
 *.o: *.o

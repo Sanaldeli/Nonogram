@@ -30,7 +30,7 @@ typedef struct
 // ASCII characters for drawing the game table
 #define TransparentBox 178
 #define SolidBox 219
-// line characters
+// line characters for table bordering
 #define hor_line 186
 #define TR_corner 187
 #define BR_corner 188
