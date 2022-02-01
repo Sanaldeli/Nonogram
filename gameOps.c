@@ -29,7 +29,10 @@ void playGame(gameTable table)
             scanf("%x %x", &row, &col);
         }
 
-        (table.user)[row + limit][col + limit] = opt - 2;
+		if (opt)
+			(table.user)[row + limit][col + limit] = -1;
+		else
+    		(table.user)[row + limit][col + limit] = 0;
     } while (!isGameOver(table));
 
     system("CLS");

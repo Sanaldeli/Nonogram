@@ -6,7 +6,7 @@ extern void printTable_dev(gameTable table);
 extern void printTable(gameTable table);
 extern void playGame(gameTable table);
 
-const difficultyInfo diff[3] = {{8, 5, 15, 3}, {15, 10, 60, 5}, {23, 15, 105, 8}};
+const difficultyInfo diff[3] = {{8, 5, 12, 3}, {15, 10, 60, 5}, {23, 15, 115, 8}};
 gameTable table;
 
 int main()
