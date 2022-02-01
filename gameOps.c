@@ -1,6 +1,8 @@
 #include "header.h"
 
 bool isGameOver(gameTable table);
+bool isRowCorrect(gameTable table, int row);
+bool isColumnCorrect(gameTable table, int col);
 void printTable(gameTable table);
 
 void playGame(gameTable table)
@@ -8,6 +10,8 @@ void playGame(gameTable table)
     int opt, row, col;
     int limit = table.difficulty.limit;
     int tableSize = table.difficulty.gameTableSize;
+    int i;
+
     // Option 0: Mark as empty
     // Option 1: Mark as checked
     // Row and Col points to table's index
@@ -29,10 +33,28 @@ void playGame(gameTable table)
             scanf("%x %x", &row, &col);
         }
 
-		if (opt)
-			(table.user)[row + limit][col + limit] = -1;
-		else
-    		(table.user)[row + limit][col + limit] = 0;
+        if (opt)
+            (table.user)[row + limit][col + limit] = -1;
+        else
+            (table.user)[row + limit][col + limit] = 0;
+
+        if (isRowCorrect(table, row))
+        {
+            for (i = 0; i < tableSize; ++i)
+                if ((table.game)[row][i])
+                    (table.user)[row + limit][i + limit] = -1;
+                else
+                    (table.user)[row + limit][i + limit] = 0;
+        }
+
+        if (isColumnCorrect(table, col))
+        {
+            for (i = 0; i < tableSize; ++i)
+                if ((table.game)[i][col])
+                    (table.user)[i + limit][col + limit] = -1;
+                else
+                    (table.user)[i + limit][col + limit] = 0;
+        }
     } while (!isGameOver(table));
 
     system("CLS");
@@ -48,8 +70,60 @@ bool isGameOver(gameTable table)
 
     for (i = 0; i < size; ++i)
         for (j = 0; j < size; ++j)
-            if ((table.game)[i][j] != (table.user)[i + limit][j + limit] + 2)
+            if ((table.game)[i][j] != -((table.user)[i + limit][j + limit]))
                 return false;
+
+    return true;
+}
+
+bool isRowCorrect(gameTable table, int row)
+{
+    int i;
+    int limit = table.difficulty.limit;
+    int size = table.difficulty.gameTableSize;
+    int tmp;
+
+    for (i = 0; i < size; ++i)
+    {
+        tmp = (table.user)[row + limit][i + limit];
+        switch ((table.game)[row][i])
+        {
+        case 0:
+            if (tmp == -1)
+                return false;
+            break;
+        case 1:
+            if (tmp == -2 || tmp == 0)
+                return false;
+            break;
+        }
+    }
+
+    return true;
+}
+
+bool isColumnCorrect(gameTable table, int col)
+{
+    int i;
+    int limit = table.difficulty.limit;
+    int size = table.difficulty.gameTableSize;
+    int tmp;
+
+    for (i = 0; i < size; ++i)
+    {
+        tmp = (table.user)[i + limit][col + limit];
+        switch ((table.game)[i][col])
+        {
+        case 0:
+            if (tmp == -1)
+                return false;
+            break;
+        case 1:
+            if (tmp == -2 || tmp == 0)
+                return false;
+            break;
+        }
+    }
 
     return true;
 }
