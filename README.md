@@ -20,4 +20,10 @@ Then, you have to enter 3 integer values.
 
 By following these steps, you can finish the game!
 
+Update
+- If you clean a spot, it will be shown completely cleared. Harder difficulties should be a lot convenient to solve.
+- Boxes per difficulty have been updated. It was almost impossible to solve hard difficulty before. Now you can!
+
+![Screenshot 2022-02-01 140300](https://user-images.githubusercontent.com/90065524/151958298-75fc574a-d0b3-47a0-9b0a-2346efb8acf8.png)
+
 I will try to find bugs to patch them, but if you find any please let me know.
