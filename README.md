@@ -8,6 +8,13 @@ https://en.wikipedia.org/wiki/Nonogram
 
 ![Screenshot 2022-01-31 182003](https://user-images.githubusercontent.com/90065524/151822025-79f1c402-f3e5-4ba0-beaa-1db7c7983048.png)
 
+## Hot to Run the Game?
+
+- Move the source codes to a folder.
+- Open command prompt on that folder.
+- Type `make` on the command prompt. (If you have another compiler rather than GCC, please make sure to update the makefile)
+- Run the executable file on the command prompt using `./game`
+
 ## How to Play?
 
 First, you must choose a difficulty (easy to hard, table gets bigger by difficulty).
